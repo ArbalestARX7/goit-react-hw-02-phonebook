@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import ContactForm from './ContactForm/ContactForm';
 import { ContactList } from './ContactList/ContactList';
-import { Title } from './Title/Title';
 import { nanoid } from 'nanoid';
 import Filter from './Filter/Filter';
 
@@ -23,21 +22,59 @@ class App extends Component {
       id: nanoid(),
     };
 
+    const existedContact = this.state.contacts.find(
+      contact => contact.name === name || contact.number === number
+    );
+
+    if (existedContact) {
+      alert(`${name} is already in contacts.`);
+      return;
+    }
+
     this.setState(({ contacts }) => ({ contacts: [newContact, ...contacts] }));
   };
 
   changeFilter = e => {
-    this.setState({ filter: e.currantTarget.value });
+    this.setState({ filter: e.currentTarget.value });
+  };
+
+  getFilteredContacts = () => {
+    const { contacts, filter } = this.state;
+
+    const normalizedFilter = filter.toLowerCase();
+
+    return contacts.filter(
+      contact =>
+        contact.name.toLowerCase().includes(normalizedFilter) ||
+        contact.number.includes(normalizedFilter)
+    );
+  };
+
+  deleteContact = contactId => {
+    this.setState(prevState => ({
+      contacts: prevState.contacts.filter(contact => contact.id !== contactId),
+    }));
   };
 
   render() {
-    const { contacts, filter } = this.state;
+    const { filter } = this.state;
+
     return (
-      <div style={{}}>
-        <Title title={'Phonebook'} />
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
+        <h1>Phonebook</h1>
         <ContactForm formSubmitHandler={this.formSubmitHandler} />
-        <Filter changeFilter={this.changeFilter} value={filter} />
-        <ContactList contacts={contacts} />
+        <h2>Contacts</h2>
+        <Filter value={filter} changeFilter={this.changeFilter} />
+        <ContactList
+          contacts={this.getFilteredContacts()}
+          deleteContact={this.deleteContact}
+        />
       </div>
     );
   }

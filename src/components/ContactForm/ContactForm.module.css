@@ -3,10 +3,12 @@
   padding: 20px;
   display: block;
   border: 1px solid #000;
+  text-align: center;
 }
 .contactLabel {
   display: flex;
   flex-direction: column;
+  margin: 0 auto;
   max-width: 200px;
   font-size: 20px;
 }
