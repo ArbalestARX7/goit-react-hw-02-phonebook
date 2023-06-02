@@ -23,7 +23,7 @@ class App extends Component {
     };
 
     const existedContact = this.state.contacts.find(
-      contact => contact.name === name || contact.number === number
+      contact => contact.name === name
     );
 
     if (existedContact) {
